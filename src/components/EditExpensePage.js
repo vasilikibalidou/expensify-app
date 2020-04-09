@@ -13,6 +13,7 @@ export class EditExpensePage extends React.Component {
     this.props.history.push("/");
   };
   render() {
+    console.log(this.props);
     return (
       <div>
         <h1>Edit Expense</h1>
@@ -24,7 +25,7 @@ export class EditExpensePage extends React.Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  expense: state.expenses.find((el) => el.id === props.match.params.id),
+  expense: state.expenses.find((expense) => expense.id == props.match.params.id),
 });
 
 const mapDispatchToProps = (dispatch) => ({

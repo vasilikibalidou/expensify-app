@@ -56,6 +56,7 @@ class ExpenseForm extends React.Component {
   };
 
   render() {
+    console.log(this.state)
     return (
       <div>
         {this.state.error && <p>{this.state.error}</p>}
