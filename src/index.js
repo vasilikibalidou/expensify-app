@@ -1,13 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router";
+import createHistory from "history/createBrowserHistory";
 import App from "./App";
 import configureStore from "./store/configureStore";
 import { startSetExpenses } from "./actions/expenses";
+import { login, logout } from "./actions/auth";
 import "./styles/styles.scss";
 import "react-dates/initialize";
-import "./firebase/firebase";
+import { firebase } from "./firebase/firebase";
+
+const history = createHistory();
 
 const store = configureStore();
 
@@ -17,16 +21,35 @@ const jsx = (
   </Provider>
 );
 
+let hasRendered = false;
+
+const renderApp = () => {
+  if (!hasRendered) {
+    ReactDOM.render(
+      <Router history={history}>{jsx}</Router>,
+      document.getElementById("root")
+    );
+    hasRendered = true;
+  }
+}
+
 ReactDOM.render(
-  <BrowserRouter><p>Loading...</p></BrowserRouter>,
+  <Router history={history}><p>Loading...</p></Router>,
   document.getElementById("root")
 );
 
-store.dispatch(startSetExpenses()).then(() => {
-  ReactDOM.render(
-    <BrowserRouter>{jsx}</BrowserRouter>,
-    document.getElementById("root")
-  );
-})
-
-
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    store.dispatch(login(user.uid));
+    store.dispatch(startSetExpenses()).then(() => {
+      renderApp();
+      if (history.location.pathname === "/") {
+        history.push("/dashboard");
+      }
+    })
+  } else {
+    store.dispatch(logout());
+    renderApp();
+    history.push("/");
+  }
+});
