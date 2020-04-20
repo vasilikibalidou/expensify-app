@@ -13,6 +13,6 @@ test("should clear uid for logout", () => {
     const action = {
         type: "LOGOUT"
     };
-    const state = authReducer({ uid: "123abc" }, action);
+    const state = authReducer({ uid: "abc123" }, action);
     expect(state).toEqual({});
 })

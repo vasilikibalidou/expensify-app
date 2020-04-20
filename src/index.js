@@ -10,6 +10,7 @@ import { login, logout } from "./actions/auth";
 import "./styles/styles.scss";
 import "react-dates/initialize";
 import { firebase } from "./firebase/firebase";
+import LoadingPage from "./components/LoadingPage";
 
 const history = createHistory();
 
@@ -34,7 +35,7 @@ const renderApp = () => {
 }
 
 ReactDOM.render(
-  <Router history={history}><p>Loading...</p></Router>,
+  <Router history={history}><LoadingPage /></Router>,
   document.getElementById("root")
 );
 
